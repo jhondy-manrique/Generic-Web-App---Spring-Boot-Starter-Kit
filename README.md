@@ -76,15 +76,28 @@ Esto iniciará una instancia de PostgreSQL expuesta en el puerto local 5433 con 
 
 Si prefieres usar una instancia local de PostgreSQL sin Docker, solo asegúrate de crear la base de datos manualmente y ajustar las variables de entorno correspondientes.
 
-### 3. Variables de Entorno
-Para evitar exponer credenciales en el código fuente, la aplicación utiliza variables de entorno en el archivo application.properties:
+## 3. Configuración de Variables de Entorno
 
-JDBC_URL=jdbc:postgresql://localhost:5432/nombre_base_datos
-JDBC_USER=tu_usuario
-JDBC_PASSWORD=tu_contraseña
-JDBC_DRIVER=org.postgresql.Driver
+La aplicación utiliza variables de entorno para gestionar las credenciales y la conexión a la base de datos. Para desarrollo local, puedes definirlas en tu IDE, en un archivo `.env` o exportarlas en tu terminal.
 
-Asegúrate de definir estas variables en tu entorno local o en la configuración de ejecución de tu IDE antes de lanzar la aplicación.
+> ⚠️ **Importante:** Las credenciales de la base de datos (`JDBC_USER`, `JDBC_PASSWORD`, `JDBC_DRIVER`,`JDBC_URL`) **deben coincidir exactamente** con las configuradas en el archivo `docker-compose.yml` para asegurar la conexión.
+
+### Variables del Sistema
+
+| Variable        | Descripción | Valor por Defecto / Sugerido        | Estado                                                                                             |
+|:----------------| :--- |:------------------------------------|:---------------------------------------------------------------------------------------------------|
+| `JDBC_URL`      | URL de conexión JDBC a PostgreSQL | `jdbc:postgresql://localhost:5433/genericWebApp` | **Fijo** (Ajustar solo si cambia el puerto, host o el nombre de la base de datos en el contenedor) |
+| `JDBC_DRIVER`   | Driver JDBC de PostgreSQL | `org.postgresql.Driver`             | **Fijo**                                                                                           |
+| `JDBC_USER`     | Usuario de la base de datos | `genericUser`                          | Personalizable (Debe coincidir con Docker)                                                         |
+| `JDBC_PASSWORD` | Contraseña de la base de datos | `password`                              | Personalizable (Debe coincidir con Docker)                                                         |
+
+---
+
+### Ejemplo de configuración en IntelliJ IDEA
+1. Ve al menú superior: `Run` > `Edit Configurations...`
+2. Selecciona la configuración de `GenericWebAppApplication`.
+3. En el campo **Environment variables**, agrega las variables con el formato:
+   `JDBC_URL=jdbc:postgresql://localhost:5433/genericWebApp;JDBC_DRIVER=org.postgresql.Driver;JDBC_USER=genericUser;JDBC_PASSWORD=password`
 
 ## 4. Ejecución del Proyecto
 
