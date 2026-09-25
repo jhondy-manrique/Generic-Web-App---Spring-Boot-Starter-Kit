@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="stylesheet" th:href="@{/css/styles.css(v=2)}" />
+  <title>Home</title>
+</head>
+<body>
+
+<main class="main">
+  <section class="section banner banner-section">
+    <div class="container">
+      <div class="login-card padding-horizontal--48">
+        <h2>Welcome Back</h2>
+        <div class="margin-bottom--12 content-center">
+          <p th:if="${username != null and !#strings.isEmpty(username)}"
+             th:text="${username}"
+             style="color: green;">
+            Usuario Ejemplo
+          </p>
+        </div>
+
+        <form th:action="@{/logout}" method="POST" style="display: inline;">
+          <button type="submit" class="btn-logout">Logout</button>
+        </form>
+
+      </div>
+    </div>
+  </section>
+</main>
+
+<script th:src="@{/js/script.js(v=1)}"></script>
+</body>
+</html>

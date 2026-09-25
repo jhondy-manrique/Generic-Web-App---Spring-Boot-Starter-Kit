@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Access Denied</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<main class="error-container">
+  <div class="error-card">
+    <h1 class="error-code">403</h1>
+    <h2>Access Denied</h2>
+
+    <p sec:authorize="isAuthenticated()">
+      Hello <strong sec:authentication="name">User</strong>, you do not have the required permissions to access this resource.
+    </p>
+
+    <p sec:authorize="!isAuthenticated()">
+      You must log in to access this area.
+    </p>
+
+    <div class="error-actions">
+      <a th:href="@{/home}" sec:authorize="isAuthenticated()" class="btn-primary">Go to Home</a>
+      <a th:href="@{/login}" sec:authorize="!isAuthenticated()" class="btn-primary">Log In</a>
+    </div>
+  </div>
+</main>
+</body>
+</html>

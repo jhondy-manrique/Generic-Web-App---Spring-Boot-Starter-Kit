@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <title>Index</title>
+</head>
+<body>
+
+<main class="main">
+    <section class="section banner banner-section">
+        <div class="container banner-column">
+            <img class="banner-image" th:src="@{/assets/images/hero.jpg}" alt="banner" />
+            <div class="banner-inner">
+                <h1 class="heading-xl">Welcome to a Generic Web App</h1>
+                <p class="paragraph">Your trusted partner in general success.</p>
+
+                <a class="btn btn-darken btn-inline" th:href="@{/login}">
+                    Login
+                </a>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- JS en estáticos -->
+<script th:src="@{/js/script.js(v=1)}"></script>
+
+</body>
+</html>

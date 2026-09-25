@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>500 - Server Error</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<main class="error-container">
+    <div class="error-card">
+        <h1 class="error-code">500</h1>
+        <h2>Internal Server Error</h2>
+
+        <!-- Mensaje si el usuario está autenticado -->
+        <p sec:authorize="isAuthenticated()">
+            Sorry <strong sec:authentication="name">User</strong>, something went wrong on our end. Our team has been notified.
+        </p>
+
+        <!-- Mensaje si el usuario NO está autenticado -->
+        <p sec:authorize="!isAuthenticated()">
+            An unexpected error occurred while processing your request.
+        </p>
+
+
+        <div class="error-actions">
+            <a th:href="@{/home}" sec:authorize="isAuthenticated()" class="btn-primary">Go to Home</a>
+            <a th:href="@{/login}" sec:authorize="!isAuthenticated()" class="btn-primary">Log In</a>
+        </div>
+    </div>
+</main>
+</body>
+</html>

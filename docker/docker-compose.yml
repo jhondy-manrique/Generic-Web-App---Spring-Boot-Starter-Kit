@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  postgresdb:
+    image: postgres:16-alpine
+    container_name: generic_postgres_db
+    restart: always
+    environment:
+      POSTGRES_DB: genericWebApp
+      POSTGRES_USER: genericUser
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
