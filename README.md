@@ -86,19 +86,22 @@ JDBC_DRIVER=org.postgresql.Driver
 
 Asegúrate de definir estas variables en tu entorno local o en la configuración de ejecución de tu IDE antes de lanzar la aplicación.
 
-### 4. Ejecución del Proyecto
+## 4. Ejecución del Proyecto
 
-Clonar el repositorio:
-git clone https://github.com/tu-usuario/generic-web-app.git
-cd generic-web-app
+**Clonar el repositorio:**
+   git clone https://github.com/jhondy-manrique/Generic-Web-App---Spring-Boot-Starter-Kit.git
 
-Ejecutar las migraciones y compilar el proyecto:
-./gradlew build
+**Levantar la base de datos:**
+   Asegúrate de tener Docker corriendo y ejecuta en la raíz del proyecto:
+   docker-compose up -d
 
-Iniciar la aplicación:
-./gradlew bootRun
+**Iniciar la aplicación:**
+   Puedes ejecutar la aplicación de cualquiera de las siguientes formas:
+  - Desde el IDE (IntelliJ / Eclipse / VS Code): Ejecuta la clase principal GenericWebAppApplication.
+  - Desde la terminal:
+    ./gradlew bootRun
 
-La aplicación estará disponible en http://localhost:8080.
+Una vez iniciada, la aplicación estará disponible en: http://localhost:8080
 
 ---
 
