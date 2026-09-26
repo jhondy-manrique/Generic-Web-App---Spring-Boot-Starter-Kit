@@ -1,36 +1,227 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      class="h-full bg-slate-50">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <link rel="stylesheet" th:href="@{/css/styles.css(v=2)}" />
-  <title>Home</title>
+  <title>Home - Pizzería Don Peppe</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 </head>
-<body>
+<body class="h-full flex text-slate-800">
 
-<main class="main">
-  <section class="section banner banner-section">
-    <div class="container">
-      <div class="login-card padding-horizontal--48">
-        <h2>Welcome Back</h2>
-        <div class="margin-bottom--12 content-center">
-          <p th:if="${username != null and !#strings.isEmpty(username)}"
-             th:text="${username}"
-             style="color: green;">
-            Usuario Ejemplo
-          </p>
-        </div>
-
-        <form th:action="@{/logout}" method="POST" style="display: inline;">
-          <button type="submit" class="btn-logout">Logout</button>
-        </form>
-
+<!-- Sidebar Navegación Principal -->
+<aside class="w-64 bg-white border-r border-slate-200 flex flex-col justify-between h-screen fixed left-0 top-0 z-20">
+  <div>
+    <!-- Logo / Brand -->
+    <div class="h-16 flex items-center px-6 border-b border-slate-100 gap-3">
+      <div class="w-9 h-9 rounded-lg bg-indigo-600 flex items-center justify-center text-white text-base">
+        <i class="fa-solid fa-utensils"></i>
+      </div>
+      <div>
+        <h1 class="font-bold text-slate-900 text-base leading-tight">Don Peppe</h1>
+        <span class="text-xs text-slate-400 font-medium">Punto de Venta</span>
       </div>
     </div>
-  </section>
+
+    <!-- Menú de navegación -->
+    <nav class="p-4 space-y-1">
+      <a th:href="@{/home}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium bg-indigo-50 text-indigo-600 transition-colors">
+        <i class="fa-solid fa-cash-register w-5 text-center"></i>
+        <span>Nueva Venta</span>
+      </a>
+      <a th:href="@{/pedidos}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+        <i class="fa-solid fa-clock-rotate-left w-5 text-center"></i>
+        <span>Pedidos Activos</span>
+      </a>
+      <a th:href="@{/historial}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+        <i class="fa-solid fa-receipt w-5 text-center"></i>
+        <span>Historial Ventas</span>
+      </a>
+      <a th:href="@{/productos}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+        <i class="fa-solid fa-pizza-slice w-5 text-center"></i>
+        <span>Productos</span>
+      </a>
+    </nav>
+  </div>
+
+  <!-- Bloque Esquina Inferior: Usuario Logueado & Rol -->
+  <div class="p-4 border-t border-slate-100 bg-slate-50/50">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-3 min-w-0">
+        <!-- Avatar con la primera letra del usuario -->
+        <div class="w-9 h-9 rounded-full bg-indigo-100 border border-indigo-200 flex items-center justify-center font-bold text-indigo-700 text-sm flex-shrink-0">
+          <span sec:authentication="name != null ? #strings.substring(name, 0, 1).toUpperCase() : 'U'">U</span>
+        </div>
+
+        <!-- Información de Sesión Dinámica -->
+        <div class="min-w-0 flex-1">
+          <p class="text-xs font-bold text-slate-900 truncate" sec:authentication="name">
+            usuario_invitado
+          </p>
+          <p class="text-[10px] font-semibold text-indigo-600 bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-100 inline-block mt-0.5 truncate max-w-full"
+             sec:authentication="principal.authorities">
+            ROLE_USER
+          </p>
+        </div>
+      </div>
+
+      <!-- Botón Logout -->
+      <form th:action="@{/logout}" method="post" class="flex-shrink-0">
+        <button type="submit" class="text-slate-400 hover:text-red-500 text-sm p-1.5 rounded-lg hover:bg-red-50 transition-colors" title="Cerrar sesión">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+</aside>
+
+<!-- Contenido Principal -->
+<main class="ml-64 flex-1 p-6 h-screen overflow-hidden">
+  <div class="grid grid-cols-12 gap-6 h-full">
+
+    <!-- Columna Izquierda: Catálogo de Productos (8 cols) -->
+    <section class="col-span-8 flex flex-col h-full overflow-hidden">
+
+      <!-- Barra superior: Búsqueda y Categorías -->
+      <div class="flex items-center justify-between gap-4 mb-6">
+        <div class="relative flex-1">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+          <input type="text" placeholder="Buscar pizza, bebida..."
+                 class="w-full pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm" />
+        </div>
+        <div class="flex items-center gap-2">
+          <button class="px-3.5 py-1.5 rounded-lg text-xs font-medium bg-indigo-600 text-white shadow-sm">Todas</button>
+          <button class="px-3.5 py-1.5 rounded-lg text-xs font-medium bg-white text-slate-600 border border-slate-200 hover:bg-slate-50">Pizzas</button>
+          <button class="px-3.5 py-1.5 rounded-lg text-xs font-medium bg-white text-slate-600 border border-slate-200 hover:bg-slate-50">Bebidas</button>
+          <button class="px-3.5 py-1.5 rounded-lg text-xs font-medium bg-white text-slate-600 border border-slate-200 hover:bg-slate-50">Entradas</button>
+        </div>
+      </div>
+
+      <!-- Grilla de Productos -->
+      <div class="flex-1 overflow-y-auto pr-2 grid grid-cols-3 gap-4 pb-6">
+
+        <!-- Producto 1 -->
+        <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
+          <div>
+            <div class="h-28 bg-slate-100 rounded-lg flex items-center justify-center text-3xl mb-3 text-slate-400 group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-colors">
+              <i class="fa-solid fa-pizza-slice"></i>
+            </div>
+            <h3 class="font-bold text-slate-900 text-sm">Pizza Pepperoni</h3>
+            <p class="text-xs text-slate-500 mt-1 line-clamp-2">Queso mozzarella, pepperoni crujiente y salsa napolitana.</p>
+          </div>
+          <div class="mt-4 flex items-center justify-between pt-3 border-t border-slate-100">
+            <span class="font-bold text-slate-900 text-base">$35.000</span>
+            <button class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white flex items-center justify-center transition-colors text-xs">
+              <i class="fa-solid fa-plus"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Producto 2 -->
+        <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
+          <div>
+            <div class="h-28 bg-slate-100 rounded-lg flex items-center justify-center text-3xl mb-3 text-slate-400 group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-colors">
+              <i class="fa-solid fa-pizza-slice"></i>
+            </div>
+            <h3 class="font-bold text-slate-900 text-sm">Pizza Hawaiana</h3>
+            <p class="text-xs text-slate-500 mt-1 line-clamp-2">Jamón artesanal, piña caramelizada y extra queso.</p>
+          </div>
+          <div class="mt-4 flex items-center justify-between pt-3 border-t border-slate-100">
+            <span class="font-bold text-slate-900 text-base">$32.000</span>
+            <button class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white flex items-center justify-center transition-colors text-xs">
+              <i class="fa-solid fa-plus"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Producto 3 -->
+        <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
+          <div>
+            <div class="h-28 bg-slate-100 rounded-lg flex items-center justify-center text-3xl mb-3 text-slate-400 group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-colors">
+              <i class="fa-solid fa-bottle-water"></i>
+            </div>
+            <h3 class="font-bold text-slate-900 text-sm">Coca-Cola 1.5L</h3>
+            <p class="text-xs text-slate-500 mt-1 line-clamp-2">Gaseosa refrescante tamaño familiar.</p>
+          </div>
+          <div class="mt-4 flex items-center justify-between pt-3 border-t border-slate-100">
+            <span class="font-bold text-slate-900 text-base">$8.000</span>
+            <button class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white flex items-center justify-center transition-colors text-xs">
+              <i class="fa-solid fa-plus"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Columna Derecha: Comanda / Carrito de Venta (4 cols) -->
+    <section class="col-span-4 bg-white border border-slate-200 rounded-xl flex flex-col h-full shadow-sm overflow-hidden">
+
+      <!-- Encabezado de la Orden -->
+      <div class="p-4 border-b border-slate-100 flex items-center justify-between">
+        <div>
+          <h2 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+            <i class="fa-solid fa-receipt text-indigo-600"></i> Orden #1024
+          </h2>
+          <span class="text-xs text-slate-400">Cliente general</span>
+        </div>
+        <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">En mesa</span>
+      </div>
+
+      <!-- Lista de Items en la Orden -->
+      <div class="flex-1 overflow-y-auto p-4 space-y-3">
+        <div class="flex items-center justify-between p-2.5 bg-slate-50 rounded-lg border border-slate-100">
+          <div>
+            <p class="text-xs font-bold text-slate-800">1x Pizza Pepperoni</p>
+            <p class="text-[10px] text-slate-400">Masa tradicional</p>
+            <p class="text-xs font-semibold text-slate-900 mt-0.5">$35.000</p>
+          </div>
+          <button class="text-slate-400 hover:text-red-600 text-xs p-1 transition-colors">
+            <i class="fa-solid fa-trash-can"></i>
+          </button>
+        </div>
+
+        <div class="flex items-center justify-between p-2.5 bg-slate-50 rounded-lg border border-slate-100">
+          <div>
+            <p class="text-xs font-bold text-slate-800">1x Coca-Cola 1.5L</p>
+            <p class="text-xs font-semibold text-slate-900 mt-0.5">$8.000</p>
+          </div>
+          <button class="text-slate-400 hover:text-red-600 text-xs p-1 transition-colors">
+            <i class="fa-solid fa-trash-can"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Totalizador y Botón de Procesar -->
+      <div class="p-4 border-t border-slate-100 bg-slate-50/50 space-y-3">
+        <div class="space-y-1.5 text-xs text-slate-600">
+          <div class="flex justify-between">
+            <span>Subtotal</span>
+            <span class="font-medium text-slate-800">$43.000</span>
+          </div>
+          <div class="flex justify-between">
+            <span>IVA (0%)</span>
+            <span class="font-medium text-slate-800">$0</span>
+          </div>
+          <div class="flex justify-between pt-2 border-t border-slate-200 text-sm font-bold text-slate-900">
+            <span>Total</span>
+            <span class="text-indigo-600 text-base">$43.000</span>
+          </div>
+        </div>
+
+        <button type="button" class="w-full flex justify-center items-center gap-2 py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+          <i class="fa-solid fa-check text-xs"></i>
+          <span>Procesar Venta</span>
+        </button>
+      </div>
+
+    </section>
+
+  </div>
 </main>
 
-<script th:src="@{/js/script.js(v=1)}"></script>
 </body>
 </html>

@@ -1,31 +1,75 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      class="h-full bg-slate-50">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Access Denied</title>
-  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>403 - Acceso Denegado | Don Peppe</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 </head>
-<body>
-<main class="error-container">
-  <div class="error-card">
-    <h1 class="error-code">403</h1>
-    <h2>Access Denied</h2>
+<body class="h-full flex items-center justify-center p-6 text-slate-800">
 
-    <p sec:authorize="isAuthenticated()">
-      Hello <strong sec:authentication="name">User</strong>, you do not have the required permissions to access this resource.
-    </p>
+<main class="w-full max-w-md">
+  <div class="bg-white border border-slate-200 rounded-2xl p-8 shadow-sm text-center">
 
-    <p sec:authorize="!isAuthenticated()">
-      You must log in to access this area.
-    </p>
-
-    <div class="error-actions">
-      <a th:href="@{/home}" sec:authorize="isAuthenticated()" class="btn-primary">Go to Home</a>
-      <a th:href="@{/login}" sec:authorize="!isAuthenticated()" class="btn-primary">Log In</a>
+    <!-- Icono de Seguridad / Acceso Prohibido -->
+    <div class="w-16 h-16 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center mx-auto mb-6 text-2xl border border-amber-100">
+      <i class="fa-solid fa-user-lock"></i>
     </div>
+
+    <!-- Código de Error -->
+    <span class="text-xs font-bold text-amber-700 bg-amber-50 px-3 py-1 rounded-full border border-amber-200 inline-block mb-3">
+            Error 403
+        </span>
+
+    <h1 class="text-2xl font-bold text-slate-900 mb-2">Acceso Restringido</h1>
+
+    <!-- Mensaje si el usuario ESTÁ autenticado -->
+    <p sec:authorize="isAuthenticated()" class="text-sm text-slate-500 mb-6 leading-relaxed">
+      Hola <strong class="text-slate-800 font-semibold" sec:authentication="name"></strong>. No tienes los permisos ni el rol suficiente para ingresar a este módulo del sistema.
+    </p>
+
+    <!-- Mensaje si el usuario NO está autenticado -->
+    <p sec:authorize="!isAuthenticated()" class="text-sm text-slate-500 mb-6 leading-relaxed">
+      Se requiere iniciar sesión con una cuenta autorizada para acceder a este recurso.
+    </p>
+
+    <!-- Acciones / Botones -->
+    <div class="space-y-3">
+      <!-- Botón primario según el estado de autenticación -->
+      <a th:href="@{/home}"
+         sec:authorize="isAuthenticated()"
+         class="w-full flex justify-center items-center gap-2 py-2.5 px-4 rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+        <i class="fa-solid fa-house text-xs"></i>
+        <span>Volver al Panel Principal</span>
+      </a>
+
+      <a th:href="@{/login}"
+         sec:authorize="!isAuthenticated()"
+         class="w-full flex justify-center items-center gap-2 py-2.5 px-4 rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+        <i class="fa-solid fa-right-to-bracket text-xs"></i>
+        <span>Iniciar Sesión</span>
+      </a>
+
+      <!-- Botón de regresar (UX para recuperar contexto rápido) -->
+      <button onclick="window.history.back()"
+              type="button"
+              class="w-full flex justify-center items-center gap-2 py-2 px-4 rounded-lg text-sm font-medium text-slate-600 bg-slate-50 hover:bg-slate-100 border border-slate-200 transition-colors">
+        <i class="fa-solid fa-arrow-left text-xs"></i>
+        <span>Volver a la página anterior</span>
+      </button>
+    </div>
+
+    <!-- Footer de la tarjeta -->
+    <div class="mt-8 pt-6 border-t border-slate-100">
+      <p class="text-xs text-slate-400">Pizzería Don Peppe &bull; Sistema POS</p>
+    </div>
+
   </div>
 </main>
+
 </body>
 </html>

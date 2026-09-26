@@ -4,6 +4,8 @@ import com.manrique.Generic_web_app.DTOs.UserRegisterDTO;
 import com.manrique.Generic_web_app.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.pulsar.PulsarProperties;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,7 +26,10 @@ public class RegisterController {
 
 
     @GetMapping("/register")
-    public String getRegister(Model model) {
+    public String getRegister(Authentication authentication, Model model) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            return "redirect:/home";
+        }
         model.addAttribute("userRegisterDTO", new UserRegisterDTO());
         return "register";
     }
